@@ -15,7 +15,7 @@ export default function register() {
 
   return (
     <div id='register-container'>
-      <h1>Regístrate</h1>
+      <h2>Regístrate</h2>
       <RegisterForm/>
     </div>
   );

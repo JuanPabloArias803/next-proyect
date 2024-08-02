@@ -10,10 +10,11 @@ export default function LoginForm() {
   const api=new LoginApiInteraction;
 
   async function loginSubmit(event:React.MouseEvent<HTMLElement>){
+
     event.preventDefault();
     try {
       if(!userEmail||!userPassword){
-        throw "Invalid credentials";
+        throw "Por favor completa todos los datos";
       }
       await api.authUser({email:userEmail,password:userPassword});
     } catch (error) {

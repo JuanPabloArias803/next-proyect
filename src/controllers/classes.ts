@@ -1,4 +1,4 @@
-import { IUser } from "@/models/interfaces";
+import { ICity, IUser } from "@/models/interfaces";
 import { useRouter } from "next/router";
 
 export class LoginApiInteraction{
@@ -53,4 +53,25 @@ export class LoginApiInteraction{
             alert(error);
           }
     }
+}
+
+export class WeatherApiInteraction{
+  router=useRouter();
+  readonly domain: string = 'https://api.openweathermap.org/data/2.5/weather';
+  readonly apiKey:string='684902b30c702f03ffdc3b97317f4f92';
+  readonly units:string='metric';
+  readonly language:string='sp';
+
+  async consultCity(city:ICity){
+    try {
+      const response: Response = await fetch(`${this.domain}?lat=${city.latitude}&lon=${city.longitude}&units=${this.units}&lang=${this.language}&appid=${this.apiKey}`);
+      if (!response.ok) {
+        throw `Error en el servidor. (${response.status}: ${response.statusText})`;
+      }
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      alert(error);
+    }
+  }
 }

@@ -12,7 +12,7 @@ export default function RegisterForm() {
     event.preventDefault();
     try {
       if(!userEmail||!userPassword||!confirmPassword){
-        throw "Invalid User";
+        throw "Por favor completa todos los datos";
       }
       if(userPassword!==confirmPassword){
         throw "Las contraseñas no coinciden";
