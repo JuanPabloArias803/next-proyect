@@ -10,7 +10,7 @@ export default function Login() {
     useEffect(() => {
         const token = sessionStorage.getItem('UT');
         if (!token) {
-            router.push("/login");
+          router.push("/login");
         }
     }, []);
 

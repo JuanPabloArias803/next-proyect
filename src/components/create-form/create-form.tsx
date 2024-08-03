@@ -1,28 +1,40 @@
 import { WeatherApiInteraction } from "@/controllers/classes";
+import { createOptions } from "@/helpers/create-options";
+import { ICityReport } from "@/models/interfaces";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function CreateForm() {
 
-  const [city, setCity] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [citiesArray, setCitiesArray] = useState<ICityReport[]>([]);
   const router=useRouter();
   const api=new WeatherApiInteraction;
-  const options=[
-    {city:"Medellín",value:{latitude:"6.25184",longitude:"-75.56359"}},
-    {city:"Bogota",value:{latitude:"4.624335",longitude:"-74.063644"}},
-    {city:"Cali",value:{latitude:"3.43722",longitude:"-76.5225"}},
-    {city:"Cartagena",value:{latitude:"10.39972",longitude:"-75.51444"}},
-    {city:"Pereira",value:{latitude:"4.8133333",longitude:"-75.6961111"}}
-  ];
 
-  async function createCity(event:React.MouseEvent<HTMLElement>){
+  useEffect(() => {
+    const userCities = localStorage.getItem('UC');
+    if(userCities){
+      setCitiesArray(JSON.parse(userCities));
+    }
+  }, []);
+
+  function createCity(event:React.MouseEvent<HTMLElement>){
     event.preventDefault();
     try {
-      const selectedCity=options.find(option => option.city === city);
+      const selectedCity=createOptions.find(option => option.name === cityName);
       if(!selectedCity){
-        throw "Por favor selecciona una ciudad"
+        throw "Por favor selecciona una ciudad";
       }
-      await api.consultCity(selectedCity.value);
+   
+      if(citiesArray.some(city=>city.name===selectedCity.name)){
+        throw "Ya tienes un registro creado para esta ciudad, por favor eliminalo antes de crearlo nuevamente";
+      }else{
+        citiesArray.push(selectedCity);
+      }
+
+      localStorage.setItem('UC',JSON.stringify(citiesArray));
+      router.push('/');
+
     } catch (error) {
       alert(error);
     }
@@ -32,7 +44,7 @@ export default function CreateForm() {
       <>
         <form id='create-form'>
             <label htmlFor='create-cityName'>Seleccionar ciudad:</label>
-            <select required onChange={(e) => setCity(e.target.value)}>
+            <select required onChange={(e) => setCityName(e.target.value)}>
               <option value="default" defaultChecked>Seleccionar</option>
               <option value="Medellín">Medellín</option>
               <option value="Bogota">Bogota</option>
