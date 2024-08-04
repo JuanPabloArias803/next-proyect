@@ -1,4 +1,4 @@
-import { ICity, IUser } from "@/models/interfaces";
+import { ICity, ILoginResponse, IUser } from "@/models/interfaces";
 import { useRouter } from "next/router";
 
 export class LoginApiInteraction{
@@ -22,7 +22,7 @@ export class LoginApiInteraction{
             if (!response.ok) {
               throw `Error en el servidor: (${response.status})`;
             }
-            const responseData = await response.json();
+            const responseData:ILoginResponse = await response.json();
             sessionStorage.setItem('UT',responseData.token); //Save token in sessionStorage
             this.router.push("/")
           } catch (error) {
@@ -69,7 +69,7 @@ export class WeatherApiInteraction{
         throw `Error en el servidor. (${response.status}: ${response.statusText})`;
       }
       const responseData = await response.json();
-      console.log(responseData);
+      return responseData;
     } catch (error) {
       alert(error);
     }
